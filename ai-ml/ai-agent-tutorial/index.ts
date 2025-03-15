@@ -1,1 +1,1 @@
-console.log("Hello via Bun!");
+console.log(process.env.OPENAI_API_KEY);

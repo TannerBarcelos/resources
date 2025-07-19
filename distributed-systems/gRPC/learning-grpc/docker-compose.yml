@@ -1,0 +1,33 @@
+services:
+  grpc-server:
+    build:
+      context: .
+      dockerfile: ./svc-2/Dockerfile
+    ports:
+      - "50051:50051"
+    networks:
+      - grpc-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "50051"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  grpc-client:
+    build:
+      context: .
+      dockerfile: ./svc-1/Dockerfile
+    environment:
+      - GRPC_SERVER_ADDRESS=grpc-server:50051
+    depends_on:
+      grpc-server:
+        condition: service_healthy
+    networks:
+      - grpc-network
+    volumes:
+      - ./proto:/app/proto:ro
+
+networks:
+  grpc-network:
+    driver: bridge

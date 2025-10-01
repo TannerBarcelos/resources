@@ -9,7 +9,7 @@ class Config:
     Loads configuration from YAML files and provides easy access to config values.
     """
     
-    def __init__(self, config_file: str = None, environment: str = "dev"):
+    def __init__(self, config_file, environment: str):
         """
         Initialize the configuration loader.
         
@@ -88,7 +88,7 @@ class Config:
 # Global configuration instance
 _config_instance = None
 
-def get_config(config_file: str = None, environment: str = None) -> Config:
+def get_config(config_file: str = None) -> Config:
     """
     Get the global configuration instance.
     
@@ -103,7 +103,7 @@ def get_config(config_file: str = None, environment: str = None) -> Config:
     
     if _config_instance is None:
         # Determine environment from parameter or environment variable
-        env = environment or os.getenv('CONFIG_ENV', 'dev')
+        env = os.getenv('CONFIG_ENV', 'dev')
         _config_instance = Config(config_file=config_file, environment=env)
     
     return _config_instance

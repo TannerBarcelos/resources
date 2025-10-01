@@ -13,7 +13,7 @@ class KafkaProducer:
     methods for sending messages to Kafka topics.
     """
     
-    def __init__(self, bootstrap_servers: str = None):
+    def __init__(self):
         """
         Initialize the Kafka producer.
         
@@ -24,7 +24,7 @@ class KafkaProducer:
         self.config = get_config()
         
         # Use provided bootstrap_servers or fall back to config
-        bootstrap_servers = bootstrap_servers or self.config.get('kafka.bootstrap_servers', 'localhost:9092')
+        bootstrap_servers = self.config.get('kafka.bootstrap_servers', 'localhost:9092')
 
         self.config = {
             'bootstrap.servers': bootstrap_servers,

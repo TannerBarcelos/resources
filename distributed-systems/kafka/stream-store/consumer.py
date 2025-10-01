@@ -12,13 +12,13 @@ class KafkaConsumer:
     A Kafka consumer class that encapsulates the consumer instance and provides
     methods for consuming messages from Kafka topics.
     """
-    def __init__(self, bootstrap_servers: str = None, group_id: str = None):
+    def __init__(self):
         self.logger = get_logger()
         self.config = get_config()
         
         # Use provided values or fall back to config
-        bootstrap_servers = bootstrap_servers or self.config.get('kafka.bootstrap_servers', 'localhost:9092')
-        group_id = group_id or self.config.get('kafka.consumer.group_id', 'order-tracker')
+        bootstrap_servers = self.config.get('kafka.bootstrap_servers', 'localhost:9092')
+        group_id = self.config.get('kafka.consumer.group_id', 'order-tracker')
         auto_offset_reset = self.config.get('kafka.consumer.auto_offset_reset', 'earliest')
         
         self.config = {

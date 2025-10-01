@@ -7,4 +7,5 @@ requires-python = ">=3.13"
 dependencies = [
     "confluent-kafka>=2.11.1",
     "faker>=37.8.0",
+    "pyyaml>=6.0.3",
 ]

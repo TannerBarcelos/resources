@@ -1,4 +1,5 @@
 import argparse
+from lib.config import get_config
 
 def parse_arguments():
     """
@@ -7,6 +8,9 @@ def parse_arguments():
     Returns:
         argparse.Namespace: Parsed command-line arguments
     """
+    config = get_config()
+    default_num_orders = config.get('application.default_num_orders', 5)
+    
     parser = argparse.ArgumentParser(
         description='Kafka Stream Store - Generate and send fake orders to Kafka',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
@@ -14,8 +18,8 @@ def parse_arguments():
     parser.add_argument(
         '--num-orders', 
         type=int, 
-        default=5,
-        help='Number of fake orders to generate and send to Kafka (default: 5 for safe fallback)'
+        default=default_num_orders,
+        help=f'Number of fake orders to generate and send to Kafka (default: {default_num_orders} for safe fallback)'
     )
     
     return parser.parse_args()

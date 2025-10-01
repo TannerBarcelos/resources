@@ -1,5 +1,6 @@
 from lib.util import decode_bytes_to_str, encode_str_to_bytes
 from lib.logger import get_logger
+from lib.config import get_config
 from confluent_kafka import Producer
 from typing import Dict
 from lib.orders import build_fake_orders
@@ -12,14 +13,18 @@ class KafkaProducer:
     methods for sending messages to Kafka topics.
     """
     
-    def __init__(self, bootstrap_servers: str = 'localhost:9092'):
+    def __init__(self, bootstrap_servers: str = None):
         """
         Initialize the Kafka producer.
         
         Args:
-            bootstrap_servers (str): Kafka broker address(es)
+            bootstrap_servers (str): Kafka broker address(es). If None, uses config value.
         """
         self.logger = get_logger()
+        self.config = get_config()
+        
+        # Use provided bootstrap_servers or fall back to config
+        bootstrap_servers = bootstrap_servers or self.config.get('kafka.bootstrap_servers', 'localhost:9092')
 
         self.config = {
             'bootstrap.servers': bootstrap_servers,
@@ -75,6 +80,7 @@ class KafkaProducer:
 def run():
     # Initialize logger 
     logger = get_logger()
+    config = get_config()
 
     # Parse command-line arguments
     logger.info("Parsing command-line arguments...")
@@ -87,13 +93,16 @@ def run():
     # Build a list of fake orders for testing
     orders = build_fake_orders(args.num_orders)
 
+    # Get topic name from config
+    orders_topic = config.get('kafka.topics.orders', 'orders')
+    
     logger.info(f"Generating and sending {args.num_orders} fake orders to Kafka...")
 
     for order in orders:
-        # Send the order message to the 'orders' topic
-        producer.send_message('orders', order)
+        # Send the order message to the orders topic
+        producer.send_message(orders_topic, order)
 
-    logger.info(f"Successfully sent {args.num_orders} orders to the 'orders' topic.")
+    logger.info(f"Successfully sent {args.num_orders} orders to the '{orders_topic}' topic.")
     
     # Close the producer to ensure all messages are sent before exiting
     producer.close()

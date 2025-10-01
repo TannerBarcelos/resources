@@ -1,0 +1,22 @@
+# Development Configuration
+# All configurable values for the Kafka Stream Store application
+
+kafka:
+  bootstrap_servers: "localhost:9092"
+  topics:
+    orders: "orders"
+  consumer:
+    group_id: "order-tracker"
+    auto_offset_reset: "earliest"
+    poll_timeout: 1.0  # seconds
+  producer:
+    # Add any producer-specific configs here if needed
+    delivery_timeout: 30  # seconds
+
+application:
+  default_num_orders: 5
+  log_level: "INFO"
+
+# JSON formatting preferences
+formatting:
+  json_indent: 2

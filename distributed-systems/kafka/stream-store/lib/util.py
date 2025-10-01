@@ -14,6 +14,12 @@ def decode_bytes_to_str(b: bytes) -> str | dict:
     except json.JSONDecodeError:
         return decoded
 
-def prettify_json(data: dict | str, indent: int = 2) -> str:
+def prettify_json(data: dict | str, indent: int = None) -> str:
     """Helper function to prettify JSON data with configurable indentation."""
+    if indent is None:
+        # Import here to avoid circular imports
+        from lib.config import get_config
+        config = get_config()
+        indent = config.get('formatting.json_indent', 2)
+    
     return json.dumps(data, indent=indent)

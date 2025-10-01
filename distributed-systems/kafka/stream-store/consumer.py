@@ -4,7 +4,7 @@ import json
 from confluent_kafka import Consumer
 
 from lib.logger import get_logger
-from lib.util import decode_bytes_to_str
+from lib.util import decode_bytes_to_str, prettify_json
 
 class KafkaConsumer:
     """
@@ -12,17 +12,19 @@ class KafkaConsumer:
     methods for consuming messages from Kafka topics.
     """
     def __init__(self, bootstrap_servers: str = 'localhost:9092', group_id: str = 'order-tracker'):
+        self.logger = get_logger()
         self.config = {
             'bootstrap.servers': bootstrap_servers,
             'group.id': group_id,  # consumer group id of the group this consumer service belongs to (if we scaled this to 10 pods in kubernetes, they would all share the same group id within a consumer group)
             'auto.offset.reset': 'earliest' # start reading at the earliest message if no committed offsets exist
         }
-        self.logger = get_logger()
         self.logger.info(f"Kafka consumer configuration: {self.config}")
         self.logger.info("Initializing Kafka consumer...")
         self.consumer = Consumer(self.config)
+
         self.logger.info("Kafka consumer initialized successfully")
-        self.consumer.subscribe(['orders']) #subscribe takes a list of topics to subscribe to, in this case just one topic 'orders'
+        topics = ['orders']
+        self.consumer.subscribe(topics) #subscribe takes a list of topics to subscribe to, in this case just one topic 'orders'
         self.logger.info("Subscribed to 'orders' topic")
 
     def consume_messages(self):
@@ -37,9 +39,9 @@ class KafkaConsumer:
                 if msg.error():
                     self.logger.error(f"Consumer error: {msg.error()}")
                     continue
-                
-                msg = decode_bytes_to_str(msg.value())
-                self.logger.info(f"Received message: {msg}")
+                deserialized = decode_bytes_to_str(msg.value())
+                self.logger.info(f"Received order: {prettify_json(deserialized)}") # pretty print the JSON message
+        # Handle any cleanup or finalization here - users will do ctrl+c to exit, which should raise a KeyboardInterrupt and be expected for graceful shutdown
         except KeyboardInterrupt:
             pass
         finally:

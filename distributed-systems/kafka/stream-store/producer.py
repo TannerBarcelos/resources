@@ -72,8 +72,6 @@ class KafkaProducer:
             self.producer.flush()
             self.logger.info("Kafka producer closed successfully")\
 
-
-
 def run():
     # Initialize logger 
     logger = get_logger()

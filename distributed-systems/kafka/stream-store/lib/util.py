@@ -13,3 +13,7 @@ def decode_bytes_to_str(b: bytes) -> str | dict:
         return json.loads(decoded)
     except json.JSONDecodeError:
         return decoded
+
+def prettify_json(data: dict | str, indent: int = 2) -> str:
+    """Helper function to prettify JSON data with configurable indentation."""
+    return json.dumps(data, indent=indent)

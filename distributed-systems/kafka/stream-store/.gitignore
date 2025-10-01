@@ -1,0 +1,3 @@
+.venv
+kafka-data
+__pycache__

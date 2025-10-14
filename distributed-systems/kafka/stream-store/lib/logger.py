@@ -4,13 +4,14 @@ from typing import Optional
 class Logger:
     """Singleton logger class to ensure consistent logging configuration across the application."""
     
+    # private class variables to hold the singleton instance and logger
     _instance: Optional['Logger'] = None
     _logger: Optional[logging.Logger] = None
     
-    def __new__(cls) -> 'Logger':
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
+    def __new__(c) -> 'Logger':
+        if c._instance is None:
+            c._instance = super().__new__(c)
+        return c._instance
     
     def __init__(self) -> None:
         if self._logger is None:

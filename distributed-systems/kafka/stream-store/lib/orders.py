@@ -1,5 +1,7 @@
+from random import random
 from typing import Dict, List
 from faker import Faker
+from datetime import datetime
 
 fake = Faker()
 
@@ -20,7 +22,7 @@ def build_fake_orders(num_orders: int = 5) -> Orders:
             'order_id': fake.uuid4(),
             'item_id': fake.uuid4(),
             'item': fake.word(),
-            'quantity': fake.random_int(min=1, max=10),
+            'quantity': fake.random_int(min=1, max=fake.random_int(1, datetime.now().timestamp())),
             'user': fake.user_name()
         }
         orders.append(order)

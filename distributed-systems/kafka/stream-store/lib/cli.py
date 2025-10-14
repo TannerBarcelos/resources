@@ -1,7 +1,7 @@
 import argparse
 from lib.config import get_config
 
-def parse_arguments():
+def parse_arguments() -> argparse.Namespace:
     """
     Parse command-line arguments for the Kafka Stream Store application.
     

@@ -9,4 +9,5 @@ run-consumer:
 	uv run consumer.py
 
 view-all-messages:
-	docker exec -it kafka kafka-console-consumer --bootstrap-server localhost:9092 --topic orders --from-beginning
+	docker exec -it kafka \
+	kafka-console-consumer --bootstrap-server localhost:9092 --topic orders --from-beginning
